@@ -40,9 +40,6 @@ migrateSites() {
         rsync -e "ssh" -r $install@$install.ssh.wpengine.net:/sites/$install/wp-content/plugins $PWD
         cd ..
         
-        # Add .ENV file for gh action
-        echo "WPE_ENV_NAME=$install" >> .env
-        
         # Create a workflow file
         mkdir .github
         cd .github
@@ -66,7 +63,7 @@ migrateSites() {
         echo "    - name: GitHub Deploy to WP Engine"                           >> main.yml
         echo "      uses: wpengine/github-action-wpe-site-deploy@main"          >> main.yml
         echo "      env: "                                                      >> main.yml
-        echo '        WPE_ENV_NAME: ${{ env.WPE_ENV_NAME }}'                    >> main.yml
+        echo "        WPE_ENV_NAME: $install"                                   >> main.yml
         echo '        WPE_SSHG_KEY_PUBLIC: ${{ secrets.WPE_PUBLIC_KEY_NAME }}'  >> main.yml
         echo '        WPE_SSHG_KEY_PRIVATE: ${{ secrets.WPE_PRIVATE_KEY_NAME }}'>> main.yml
         
