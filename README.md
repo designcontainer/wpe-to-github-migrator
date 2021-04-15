@@ -10,6 +10,11 @@ It is important that you have both Git Permission to the repo and SSH access to 
 
 | Name              | Type                 | Usage                                                                                                              |
 | ----------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `ENV_SITE_LIST`   | Environment Variable | Comma separated list of install to migrate                                                                         |
 | `ENV_FOLDER_PATH` | Environment Variable | Insert the name of the path you'd like to pull your sites to. Sites will automatically be deleted after migration. |
 | `ENV_GH_USER`     | Environment Variable | Your Github Username.                                                                                              |
 | `ENV_GH_TOKEN`    | Environment Variable | Your [Github access token](https://github.com/settings/tokens).                                                    |
+
+### To run script:
+
+`$ sh script.sh`

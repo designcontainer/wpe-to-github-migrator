@@ -1,16 +1,15 @@
 #!/bin/bash -e
 
-
-
-if [ ! -f .env ]
-then
-    export $(cat .env | xargs)
-fi
+set -a # automatically export all variables
+source .env
+set +a
 
 migrateSites() {
     arr=("$@")
     for install in "${arr[@]}";
     do
+        echo "Migrating: $install ..."
+        
         # site vars
         repo="designcontainer/$install"
         topic="sites"
@@ -94,7 +93,7 @@ migrateSites() {
         --request PUT \
         --user $ENV_GH_USER:$ENV_GH_TOKEN \
         --header "Accept: application/vnd.github.mercy-preview+json" \
-        "https://api.github.com/repos/designcontainer/dc2017/topics" \
+        "https://api.github.com/repos/designcontainer/$install/topics" \
         --data '{"names":["site", "wpengine"]}'
         
         # Set SSH secrets
@@ -114,10 +113,10 @@ migrateSites() {
     
 }
 
-# Sites to configure:
-installs=("dc2017") #Format: "install1" "install2" "install3"
+IFS=', ' read -r -a installs <<< $ENV_SITE_LIST
 
-# Tasks
 migrateSites "${installs[@]}"
+
+echo 'Done!'
 
 # Written by Rostislav Melkumyan 2021
