@@ -2,9 +2,12 @@
 
 ### Before you start:
 
-It is important that you have both Git Permission to the repo and SSH access to the WPE Server.
+It is important that you have the following:
+- Git Permission to the repo.
+- SSH access to the WPE Server.
+- [Github CLI](https://cli.github.com/) installed on your machine.
+- [jq (Command-line JSON processor)](https://github.com/stedolan/jq/wiki/Installation) installed on your machine.
 
-[Github CLI](https://cli.github.com/) is also required.
 
 ### Required Environment Variables:
 
