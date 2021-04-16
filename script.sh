@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
+scriptpath="$(dirname $0)"
+
 set -a # automatically export all variables
-source .env
+source $scriptpath/.env
 set +a
 
 migrateSites() {
@@ -85,13 +87,16 @@ migrateSites() {
         # Create a new GH repo for the site
         gh repo create $repo -y --private --description "Site repo for $install."
         
+        # Get the env type
+        env_type=$( jq '.results[]  | select(.name == "dc2017") | .environment' $ENV_FOLDER_PATH/sites.json )
+        
         # Add topics
         curl \
         --request PUT \
         --user $ENV_GH_USER:$ENV_GH_TOKEN \
         --header "Accept: application/vnd.github.mercy-preview+json" \
         "https://api.github.com/repos/designcontainer/$install/topics" \
-        --data '{"names":["site", "wpengine"]}'
+        --data '{"names":["site", "wpengine", '"$env_type"']}'
         
         # Set SSH secrets
         #   Edit: It turns out you can have global secrets.
@@ -110,9 +115,13 @@ migrateSites() {
     
 }
 
-IFS=', ' read -r -a installs <<< $ENV_SITE_LIST
+all_sites=$(curl -X GET "https://api.wpengineapi.com/v1/installs?limit=200" -u $ENV_WPE_USER:$ENV_WPE_TOKEN)
+echo $all_sites > $ENV_FOLDER_PATH/sites.json;
 
+IFS=', ' read -r -a installs <<< $ENV_SITE_LIST
 migrateSites "${installs[@]}"
+
+rm $ENV_FOLDER_PATH/sites.json
 
 echo 'Done!'
 
